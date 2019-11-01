@@ -23,7 +23,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", (req, res) => {
     const todo = new Todo({
         listId: req.body.listId,
-        name: req.body.name,
+        task: req.body.task,
         done: req.body.done
     })
 
@@ -43,9 +43,10 @@ router.delete("/:id", async (req, res) => {
 
 router.patch("/:id", async (req, res) => {
     try {
-        const updatedTodo = await Todo.updateOne(
-            { _id: req.params.id },
-            { $set: { name: req.body.name, done: req.body.done } }
+        const updatedTodo = await Todo.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
         )
         res.json(updatedTodo)
     } catch (err) {

@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const List = require("../models/List")
+const Todo = require("../models/Todo")
 
 router.get("/", async (req, res) => {
     const lists = await List.find()
@@ -29,6 +30,7 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const removedList = await List.deleteOne({ _id: req.params.id })
+        await Todo.deleteMany({ listId: req.params.id })
         res.json(removedList)
     } catch (err) {
         res.json({ message: err })
